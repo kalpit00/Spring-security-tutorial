@@ -9,6 +9,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
 public class WebSecurityConfig {
+
+    private static final String[] WHITE_LIST_URLS = {"/hello", "/register"};
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(11);
@@ -16,6 +18,7 @@ public class WebSecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests().anyRequest().permitAll();
+        http.cors().and().csrf().disable().authorizeRequests().requestMatchers(WHITE_LIST_URLS).permitAll();
+        return http.build();
     }
 }
