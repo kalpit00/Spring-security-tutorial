@@ -3,6 +3,7 @@ package com.kalpit00.Spring.security.client.controller;
 import com.kalpit00.Spring.security.client.entity.User;
 import com.kalpit00.Spring.security.client.entity.VerificationToken;
 import com.kalpit00.Spring.security.client.event.RegistrationCompleteEvent;
+import com.kalpit00.Spring.security.client.model.PasswordModel;
 import com.kalpit00.Spring.security.client.model.UserModel;
 import com.kalpit00.Spring.security.client.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -46,8 +49,12 @@ public class RegistrationController {
     }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestBody) {
-        
+    public String resetPassword(@RequestBody PasswordModel passwordModel) {
+        User user = userService.findUserByEmail(passwordModel.getEmail());
+        if (user != null) {
+            String token = UUID.randomUUID().toString();
+            userService.createPasswordResetTokenForUser(user, token);
+        }
     }
 
     private void resendVerificationTokenMail(User user, VerificationToken verificationToken, String applicationUrl) {

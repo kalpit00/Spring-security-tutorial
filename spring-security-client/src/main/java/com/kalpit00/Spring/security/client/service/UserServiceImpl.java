@@ -66,4 +66,14 @@ public class UserServiceImpl implements UserService {
         verificationTokenRepository.save(verificationToken);
         return verificationToken;
     }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public void createPasswordResetTokenForUser(User user, String token) {
+
+    }
 }
