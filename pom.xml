@@ -18,6 +18,7 @@
     <modules>
         <module>spring-security-client</module>
         <module>Oath-authorization-server</module>
+        <module>Oath-resource-server</module>
     </modules>
 
 </project>
