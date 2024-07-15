@@ -4,6 +4,7 @@ import com.kalpit00.Spring.security.client.entity.PasswordResetToken;
 import com.kalpit00.Spring.security.client.entity.User;
 import com.kalpit00.Spring.security.client.entity.VerificationToken;
 import com.kalpit00.Spring.security.client.model.UserModel;
+import com.kalpit00.Spring.security.client.repository.PasswordResetTokenRepository;
 import com.kalpit00.Spring.security.client.repository.UserRepository;
 import com.kalpit00.Spring.security.client.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(11);
 
@@ -75,6 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createPasswordResetTokenForUser(User user, String token) {
-        PasswordResetToken passwordResetToken = null;
+        PasswordResetToken passwordResetToken = new PasswordResetToken(user, token);
+        passwordResetTokenRepository.save(passwordResetToken);
     }
 }
