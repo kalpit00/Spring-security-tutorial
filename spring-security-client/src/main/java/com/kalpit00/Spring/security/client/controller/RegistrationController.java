@@ -49,12 +49,21 @@ public class RegistrationController {
     }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestBody PasswordModel passwordModel) {
+    public String resetPassword(@RequestBody PasswordModel passwordModel, HttpServletRequest request) {
         User user = userService.findUserByEmail(passwordModel.getEmail());
+        String url = "";
         if (user != null) {
             String token = UUID.randomUUID().toString();
             userService.createPasswordResetTokenForUser(user, token);
+            url = passwordResetTokenMail(user, token, applicationUrl(request));
         }
+        return url;
+    }
+
+    private String passwordResetTokenMail(User user, String token, String applicationUrl) {
+        String url = applicationUrl + "/savePassword?token=" + token;
+        log.info("Click link to reset your password: {}", url);
+        return url;
     }
 
     private void resendVerificationTokenMail(User user, VerificationToken verificationToken, String applicationUrl) {
