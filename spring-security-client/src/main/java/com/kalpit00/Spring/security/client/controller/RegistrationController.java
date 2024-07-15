@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -64,6 +65,14 @@ public class RegistrationController {
     public String savePassword(@RequestParam("token") String token, @RequestBody PasswordModel passwordModel, HttpServletRequest request) {
         String result = userService.validatePasswordResetToken(token);
         if (!result.equalsIgnoreCase("Valid Password reset token")) {
+            return result;
+        }
+        Optional<User> user = userService.getUserByPasswordResetToken(token);
+        if (user.isPresent()) {
+            userService.changePassword(user.get(), passwordModel.getNewPassword());
+            return "Password Reset Successfully";
+        }
+        else {
             return result;
         }
     }
