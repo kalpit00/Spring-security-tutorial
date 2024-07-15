@@ -16,4 +16,6 @@ public interface UserService {
     User findUserByEmail(String email);
 
     void createPasswordResetTokenForUser(User user, String token);
+
+    String validatePasswordResetToken(String token);
 }

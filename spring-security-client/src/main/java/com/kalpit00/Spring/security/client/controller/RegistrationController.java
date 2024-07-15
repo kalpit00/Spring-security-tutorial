@@ -34,7 +34,7 @@ public class RegistrationController {
     @GetMapping("/verifyRegistration")
     public String verifyRegistration(@RequestParam("token") String token) {
         String result = userService.validateVerificationToken(token);
-        if (result.equalsIgnoreCase("Valid")) {
+        if (result.equalsIgnoreCase("Valid verification token")) {
             return "User Verified Successfully";
         }
         return "Bad User";
@@ -58,6 +58,14 @@ public class RegistrationController {
             url = passwordResetTokenMail(user, token, applicationUrl(request));
         }
         return url;
+    }
+
+    @PostMapping("/savePassword")
+    public String savePassword(@RequestParam("token") String token, @RequestBody PasswordModel passwordModel, HttpServletRequest request) {
+        String result = userService.validatePasswordResetToken(token);
+        if (!result.equalsIgnoreCase("Valid Password reset token")) {
+            return result;
+        }
     }
 
     private String passwordResetTokenMail(User user, String token, String applicationUrl) {

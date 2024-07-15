@@ -82,4 +82,19 @@ public class UserServiceImpl implements UserService {
         PasswordResetToken passwordResetToken = new PasswordResetToken(user, token);
         passwordResetTokenRepository.save(passwordResetToken);
     }
+
+    @Override
+    public String validatePasswordResetToken(String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+        if (passwordResetToken == null) {
+            return "Invalid Password reset token";
+        }
+        User user =  passwordResetToken.getUser();
+        Calendar calendar = Calendar.getInstance();
+        if (passwordResetToken.getExpirationTime().getTime() - calendar.getTime().getTime() <= 0) {
+            passwordResetTokenRepository.delete(passwordResetToken);
+            return "Expired Password reset token";
+        }
+        return "Valid Password reset token";
+    }
 }
