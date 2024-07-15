@@ -1,5 +1,6 @@
 package com.kalpit00.Spring.security.client.service;
 
+import com.kalpit00.Spring.security.client.entity.PasswordResetToken;
 import com.kalpit00.Spring.security.client.entity.User;
 import com.kalpit00.Spring.security.client.entity.VerificationToken;
 import com.kalpit00.Spring.security.client.model.UserModel;
@@ -74,6 +75,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createPasswordResetTokenForUser(User user, String token) {
-
+        PasswordResetToken passwordResetToken = null;
     }
 }
