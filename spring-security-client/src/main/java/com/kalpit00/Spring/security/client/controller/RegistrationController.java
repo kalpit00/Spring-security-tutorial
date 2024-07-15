@@ -45,6 +45,11 @@ public class RegistrationController {
         return "Re Verification Link Sent!";
     }
 
+    @PostMapping("/resetPassword")
+    public String resetPassword(@RequestBody) {
+        
+    }
+
     private void resendVerificationTokenMail(User user, VerificationToken verificationToken, String applicationUrl) {
         String url = applicationUrl + "/verifyRegistration?token=" + verificationToken.getToken();
 
