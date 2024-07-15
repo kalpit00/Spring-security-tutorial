@@ -83,7 +83,7 @@ public class RegistrationController {
         if (!userService.checkIfValidOldPassword(user, passwordModel.getOldPassword())) {
             return "Invalid Old Password";
         }
-
+        userService.changePassword(user, passwordModel.getNewPassword());
         return "Password Changed Successfully";
     }
 
