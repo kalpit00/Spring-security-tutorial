@@ -21,7 +21,6 @@ public class WebClientConfiguration {
                 .apply(oauth2Client.oauth2Configuration())
                 .build();
     }
-
     @Bean
     OAuth2AuthorizedClientManager authorizedClientManager(
             ClientRegistrationRepository clientRegistrationRepository,
