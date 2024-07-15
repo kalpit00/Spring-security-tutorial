@@ -10,6 +10,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.UUID;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -37,5 +40,30 @@ public class UserServiceImpl implements UserService {
     public void saveVerificationTokenForUser(User user, String token) {
         VerificationToken verificationToken = new VerificationToken(user, token);
         verificationTokenRepository.save(verificationToken);
+    }
+
+    @Override
+    public String validateVerificationToken(String token) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+        if (verificationToken == null) {
+            return "Invalid verification token";
+        }
+        User user =  verificationToken.getUser();
+        Calendar calendar = Calendar.getInstance();
+        if (verificationToken.getExpirationTime().getTime() - calendar.getTime().getTime() <= 0) {
+            verificationTokenRepository.delete(verificationToken);
+            return "Expired verification token";
+        }
+        user.setEnabled(true);
+        userRepository.save(user);
+        return "Valid verification token";
+    }
+
+    @Override
+    public VerificationToken generateNewVerificationToken(String oldToken) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(oldToken);
+        verificationToken.setToken(UUID.randomUUID().toString());
+        verificationTokenRepository.save(verificationToken);
+        return verificationToken;
     }
 }
